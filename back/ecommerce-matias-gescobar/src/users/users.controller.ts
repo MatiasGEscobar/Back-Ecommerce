@@ -1,13 +1,47 @@
-import { Controller, Get } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UsersService } from "./users.service";
+import { User } from "./users.entity";
+import { validateUserInteceptor } from "src/interceptors/validateUser.interceptor";
+import { AuthGuard } from "src/auth/auth.guard";
 
 
 @Controller('users')
 export class UsersController{
-    constructor (private readonly UsersService:UsersService) {}
+    constructor (private readonly usersService : UsersService) {}
 
     @Get()
-    getUsers(){
-        return this.UsersService.getUsers();
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    getUsers(@Query('page') page: number = 1, @Query('limit') limit: number = 5){
+        return this.usersService.getUsers(page, limit);
+    }
+
+    @Get(':id')
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    getUserById(@Param('id') id: string) {
+        return this.usersService.getUserById(Number(id));
+    }
+
+    @Post()
+    @UseInterceptors(validateUserInteceptor)
+    @HttpCode(HttpStatus.CREATED)
+    createUser(@Body() createUser : User){
+        return this.usersService.createUser(createUser);
+    }
+
+    @Put(':id')
+    @UseInterceptors(validateUserInteceptor)
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    updateUser(@Param('id') id: number, @Body() updateUser: User){
+        return this.usersService.updateUser(id, updateUser);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AuthGuard)
+    deleteUser(@Param('id') id: number){
+        return this.usersService.deleteUser(id);
     }
 }
