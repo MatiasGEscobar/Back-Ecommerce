@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./products.service";
-import { Product } from "./products.entity";
+import { Product } from "src/entities/products.entity";
 import { validateProductInteceptor } from "src/interceptors/validateProduct.interceptor";
 import { AuthGuard } from "src/auth/auth.guard";
 
@@ -15,10 +15,15 @@ export class ProductController{
         return this.ProductService.getProducts(page, limit);
     }
 
+    @Get('seeder')
+    addProducts(){
+        return this.ProductService.addProducts()
+    }
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     getProductById(@Param('id') id:string){
-       return this.ProductService.getProductById(Number(id));
+       return this.ProductService.getProductById(id);
     }
     
     @Post()
@@ -34,13 +39,13 @@ export class ProductController{
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     updateProduct(@Param('id') id: string, @Body() updateProduct: Product){
-        return this.ProductService.updateProduct(Number(id), updateProduct);
+        return this.ProductService.updateProduct(id, updateProduct);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
     deleteProduct(@Param('id') id:string){
-        return this.ProductService.deleteProduct(Number(id));
+        return this.ProductService.deleteProduct(id);
     }
 }

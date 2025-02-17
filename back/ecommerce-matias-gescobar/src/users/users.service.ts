@@ -1,34 +1,29 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
-import { User } from './users.entity';
+import { User } from 'src/entities/users.entity';
+import { createUserDto } from 'src/dtos/CreateUserDto';
 
 @Injectable()
 export class UsersService{
-    constructor (private usersRepository : UsersRepository){}
+    constructor (private readonly usersRepository : UsersRepository){}
     
-    async getUsers(page: number, limit: number): Promise <Omit<User, 'password'>[]> { 
-        const users = await this.usersRepository.getUsers(page,limit);
-        return users.map((user) => ({ ...user, password: undefined }));
+    getUsers(page: number, limit: number) { 
+        return this.usersRepository.getUsers(page,limit);
     }
 
-    getUserById(id: Number): Omit <User, 'password'> | undefined{               
-        const userFound = this.usersRepository.getById(id);
-        if (!userFound){
-            return undefined;
-        }
-        const {password, ...rest} = userFound
-        return rest;
+    getUserById(id: string) {               
+        return this.usersRepository.getById(id);
     } 
 
-    createUser(createUser : User) : Promise <Number>{ 
-        return this.usersRepository.createUser(createUser) 
+    createUser(user : createUserDto) { 
+        return this.usersRepository.createUser(user); 
     }
 
-    updateUser(id: Number, updateUser: User): Promise <Number>{                                  
-        return this.usersRepository.updateUser(id, updateUser);
+    updateUser(id: string, user: createUserDto) {                                  
+        return this.usersRepository.updateUser(id, user);
     }
 
-    deleteUser(id: Number): Promise <Number>{                                                 
+    deleteUser(id: string) {                                                 
         return this.usersRepository.deleteUser(id);
     }
 }

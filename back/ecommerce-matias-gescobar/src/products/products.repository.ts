@@ -1,43 +1,96 @@
-import { Injectable } from "@nestjs/common";
-import { Product } from "./products.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Category } from "src/entities/categories.entity";
+import * as data from "../utils/seeders/Archivo actividad 3.json";
+import { Product } from "src/entities/products.entity";
+import { NotFoundException } from "@nestjs/common";
 
 
-@Injectable()
 export class ProductsRepository{
-    private products: Product[] = [];
+    constructor(
+        @InjectRepository(Product)
+        private productsRepository: Repository<Product>,
+        @InjectRepository(Category)
+        private categoriesRepository: Repository<Category>,
+    ){}
 
 async getProducts(page : number = 1, limit: number = 5): Promise <Product[]>{
-    const startIndex = (page - 1) * limit;
-    return await this.products.slice(startIndex, startIndex + limit)
+    const products = await this.productsRepository.find({
+        relations: {
+            category: true,
+        },
+    })
+
+    let inStock = products.filter((product) => product.stock > 0)
+
+    const startIndex = (page -1 ) * limit
+    const endIndex = startIndex + +limit
+
+    inStock = inStock.slice(startIndex, endIndex)
+
+    return inStock
 }
 
-getById(id : Number) : Product | undefined{
-    const serchProduct = this.products.find((product) => product.id === id);
-    return serchProduct;
+async getById(id : string) : Promise<Product | undefined>{
+    const product = await this.productsRepository.findOneBy({ id })
+
+    if(!product){
+        throw new NotFoundException('Producto no Encontrado')
+    }
+    return product
 }
 
-async createProduct(newProduct: Product): Promise <Number>{
-    const id = this.products.length + 1;
-    newProduct.id = id
-    this.products.push(newProduct)
-    return id;
+async addProducts() {
+    const categories = await this.categoriesRepository.find()
+
+    data?.map(async (element) => {
+        const relatedCategory = categories.find(
+            (category) => category.name === element.category,
+        )
+
+        const product = new Product()
+        product.name = element.name
+        product.description = element.description
+        product.price = element.price
+        product.stock = element.price
+        product.category = relatedCategory
+
+
+        await this.productsRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Product)
+        .values(product)
+        .orUpdate(['description', 'price', 'stock'], ['name'])
+        .execute()
+    })
+
+    return "Productos agregados"
 }
 
-async updateProduct(id : Number, updateProduct : Product) : Promise <Number>{
-    const index = this.products.findIndex((product) => product.id == id);
-    
-    this.products[index].name = updateProduct.name;
-    this.products[index].description = updateProduct.description;
-    this.products[index].price = updateProduct.price;
-    this.products[index].stock = updateProduct.stock;
-    this.products[index].imgUrl = updateProduct.imgUrl;
+async createProduct(product: Partial<Product>): Promise <Partial<Product>>{
+    const newProduct = await this.productsRepository.save(product)
 
-    return this.products[index].id;
+    return newProduct;
 }
 
-async deleteProduct(id : Number): Promise<Number>{
-    const index = this.products.findIndex((product) => product.id === id);
-    this.products.splice(index,1);
-    return id;
+async updateProduct(id : string, product: Product){
+    await this.productsRepository.update(id, product)
+
+    const updateProduct = await this.productsRepository.findOneBy ({ id })
+
+    return updateProduct
+}
+
+async deleteProduct(id : string): Promise<Partial<Product>>{
+    const product = await this.productsRepository.findOneBy({ id })
+
+    if(!product){
+        throw new NotFoundException ("Producto no encontrado")
+    }
+
+    this.productsRepository.remove(product)
+
+    return product
 }
 }
