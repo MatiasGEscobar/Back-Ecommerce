@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { User } from "src/entities/users.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { createUserDto } from "src/dtos/CreateUserDto";
 
 
-@Injectable()
 export class UsersRepository{
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
@@ -35,14 +34,14 @@ async getById(id : string) {
         throw new NotFoundException('Usuario no encontrado')
     }
 
-    const { password, ...userWithoutPassword} = user
+    const { password, isAdmin, ...userWithoutPassword} = user
     return userWithoutPassword;
 }
 
 async createUser(user: createUserDto): Promise <Partial<User>>{
     const newUser = await this.usersRepository.save(user)
 
-    const {password, ...userWithoutPassword } = newUser
+    const {password, isAdmin, ...userWithoutPassword } = newUser
 
     return userWithoutPassword
 }
@@ -52,7 +51,7 @@ async updateUser(id : string, user : createUserDto) {
 
     const updateUser = await this.usersRepository.findOneBy({ id })
 
-    const {password, ...userWithoutPassword } = updateUser
+    const {password, isAdmin, ...userWithoutPassword } = updateUser
 
     return userWithoutPassword
 }
@@ -66,7 +65,7 @@ async deleteUser(id : string): Promise<Partial<User>>{
 
     this.usersRepository.remove(user)
 
-    const {password, ...userWithoutPassword } = user
+    const {password, isAdmin, ...userWithoutPassword } = user
 
     return userWithoutPassword
     

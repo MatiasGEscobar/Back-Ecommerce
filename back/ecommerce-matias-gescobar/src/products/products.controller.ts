@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./products.service";
 import { Product } from "src/entities/products.entity";
 import { validateProductInteceptor } from "src/interceptors/validateProduct.interceptor";
@@ -22,7 +22,7 @@ export class ProductController{
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getProductById(@Param('id') id:string){
+    getProductById(@Param('id', ParseUUIDPipe) id:string){
        return this.ProductService.getProductById(id);
     }
     
@@ -38,14 +38,14 @@ export class ProductController{
     @UseInterceptors(validateProductInteceptor)
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    updateProduct(@Param('id') id: string, @Body() updateProduct: Product){
+    updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() updateProduct: Product){
         return this.ProductService.updateProduct(id, updateProduct);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    deleteProduct(@Param('id') id:string){
+    deleteProduct(@Param('id', ParseUUIDPipe) id:string){
         return this.ProductService.deleteProduct(id);
     }
 }

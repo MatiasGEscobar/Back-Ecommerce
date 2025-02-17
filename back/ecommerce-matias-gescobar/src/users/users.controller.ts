@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { User } from "src/entities/users.entity";
 import { validateUserInteceptor } from "src/interceptors/validateUser.interceptor";
@@ -20,7 +20,7 @@ export class UsersController{
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    getUserById(@Param('id') id: string) {
+    getUserById(@Param('id', ParseUUIDPipe) id: string) {
         return this.usersService.getUserById(id);
     }
 
@@ -35,14 +35,14 @@ export class UsersController{
     @UseInterceptors(validateUserInteceptor)
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    updateUser(@Param('id') id: string, @Body() updateUser: createUserDto){
+    updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() updateUser: createUserDto){
         return this.usersService.updateUser(id, updateUser);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    deleteUser(@Param('id') id: string){
+    deleteUser(@Param('id', ParseUUIDPipe) id: string){
         return this.usersService.deleteUser(id);
     }
 }

@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { loginUserDto } from "src/dtos/LoginUserDto";
 
 
 @Controller('auth')
@@ -7,13 +8,10 @@ export class AuthController{
     constructor (private readonly authService: AuthService) {}
 
 @Post('singin')
-singIn(@Body('email') email:string,@Body('password') password: string){
-    if(!email || !password){
-        return "Email y Password son Necesarios"
-    }
+singIn(@Body() loginUser: loginUserDto){
 
-return this.authService.singIn(email, password)
-
+    const { email, password } = loginUser
+    return this.authService.singIn(email, password)
 }
 
 }

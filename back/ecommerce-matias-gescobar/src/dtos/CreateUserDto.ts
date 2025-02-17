@@ -12,6 +12,8 @@ export class createUserDto {
     @IsEmail()
     email: string
 
+    @IsNotEmpty()
+    @IsString()
     @Length(8,15)
     @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)
