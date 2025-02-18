@@ -13,6 +13,7 @@ import { Order } from './entities/orders.entity';
 import { OrderDetail } from './entities/orderDetails.entity';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 
 @Module({
@@ -34,7 +35,7 @@ import { OrdersModule } from './orders/orders.module';
       logging: true
     })
   }),
-  CategoriesModule, ProductsModule, UsersModule, AuthModule, OrdersModule],
+  CategoriesModule, ProductsModule, UsersModule, AuthModule, OrdersModule, CloudinaryModule],
   controllers: [AppController],
   providers: [AppService],
 })
