@@ -21,6 +21,13 @@ export class createUserDto {
 
     @IsNotEmpty()
     @IsString()
+    @Length(8,15)
+    @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)
+    confirmPassword: string
+
+    @IsNotEmpty()
+    @IsString()
     @Length(3,80)
     address: string
 

@@ -24,12 +24,6 @@ export class UsersController{
         return this.usersService.getUserById(id);
     }
 
-    @Post()
-    @UseInterceptors(validateUserInteceptor)
-    @HttpCode(HttpStatus.CREATED)
-    createUser(@Body() createUser : createUserDto){
-        return this.usersService.createUser(createUser);
-    }
 
     @Put(':id')
     @UseInterceptors(validateUserInteceptor)

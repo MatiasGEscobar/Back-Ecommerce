@@ -14,6 +14,7 @@ import { OrderDetail } from './entities/orderDetails.entity';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { JwtModule } from '@nestjs/jwt';
 
 
 @Module({
@@ -35,7 +36,11 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
       logging: true
     })
   }),
-  CategoriesModule, ProductsModule, UsersModule, AuthModule, OrdersModule, CloudinaryModule],
+  JwtModule.register({
+    global: true,
+    signOptions: {expiresIn: '1h'},
+    secret: process.env.JWT_SECRET
+  }) ,CategoriesModule, ProductsModule, UsersModule, AuthModule, OrdersModule, CloudinaryModule],
   controllers: [AppController],
   providers: [AppService],
 })

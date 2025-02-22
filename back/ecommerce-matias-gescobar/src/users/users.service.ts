@@ -15,10 +15,6 @@ export class UsersService{
         return this.usersRepository.getById(id);
     } 
 
-    createUser(user : createUserDto) { 
-        return this.usersRepository.createUser(user); 
-    }
-
     updateUser(id: string, user: createUserDto) {                                  
         return this.usersRepository.updateUser(id, user);
     }

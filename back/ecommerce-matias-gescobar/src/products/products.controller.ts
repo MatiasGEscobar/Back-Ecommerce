@@ -29,7 +29,6 @@ export class ProductController{
     @Post()
     @UseInterceptors(validateProductInteceptor)
     @HttpCode(HttpStatus.CREATED)
-    @UseGuards(AuthGuard)
     createProduct(@Body() createProduct : Product){
        return this.ProductService.createProduct(createProduct);
     }
@@ -44,7 +43,6 @@ export class ProductController{
 
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthGuard)
     deleteProduct(@Param('id', ParseUUIDPipe) id:string){
         return this.ProductService.deleteProduct(id);
     }
