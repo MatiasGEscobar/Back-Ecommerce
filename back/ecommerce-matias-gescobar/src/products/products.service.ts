@@ -26,8 +26,8 @@ createProduct (createProduct: Product){
     return this.productRepository.createProduct (createProduct) 
 }
     
-updateProduct (id: string, updateProduct: Product){                          
-    return this.productRepository.updateProduct(id, updateProduct);
+updateProduct (id: string, product: Product){                          
+    return this.productRepository.updateProduct(id, product);
 }
     
 deleteProduct (id: string){                                          

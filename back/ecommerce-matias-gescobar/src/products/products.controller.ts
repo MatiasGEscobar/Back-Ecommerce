@@ -2,7 +2,10 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPi
 import { ProductService } from "./products.service";
 import { Product } from "src/entities/products.entity";
 import { validateProductInteceptor } from "src/interceptors/validateProduct.interceptor";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "src/guards/auth.guard";
+import { Roles } from "src/decorators/roles.decorators";
+import { Role } from "src/roles.enum";
+import { RolesGuard } from "src/guards/roles.guard";
 
 
 @Controller('products')
@@ -34,11 +37,12 @@ export class ProductController{
     }
 
     @Put(':id')
-    @UseInterceptors(validateProductInteceptor)
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthGuard)
-    updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() updateProduct: Product){
-        return this.ProductService.updateProduct(id, updateProduct);
+    @UseInterceptors(validateProductInteceptor)
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
+    updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() product: Product){
+        return this.ProductService.updateProduct(id, product);
     }
 
     @Delete(':id')

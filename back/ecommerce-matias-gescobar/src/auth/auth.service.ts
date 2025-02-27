@@ -3,6 +3,7 @@ import { UsersRepository } from 'src/users/users.repository';
 import * as bcrypt from 'bcrypt'
 import { createUserDto } from 'src/dtos/CreateUserDto';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/roles.enum';
 
 @Injectable()
 export class AuthService{
@@ -41,7 +42,7 @@ async singIn (email: string, password: string ): Promise<{}>{
     const userPayload = {
         id: user.id,
         email: user.email,
-        isAdmin: user.isAdmin
+        roles: [user.isAdmin? Role.Admin : Role.User]
     }
     const token = this.jwtService.sign(userPayload)
         return { success: "Login Exitoso!", token }

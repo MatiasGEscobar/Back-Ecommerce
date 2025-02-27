@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService, TokenExpiredError } from "@nestjs/jwt";
 import { Observable } from "rxjs";
+import { Role } from "src/roles.enum";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
@@ -19,7 +20,6 @@ export class AuthGuard implements CanActivate{
 
             payload.iat = new Date (payload.iat * 1000)
             payload.exp = new Date (payload.exp * 1000)
-            payload.roles = ['admin']
             request.user = payload
             return true;
         } catch (err) {
