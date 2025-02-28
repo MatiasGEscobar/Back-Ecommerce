@@ -46,7 +46,7 @@ async createUser(user: createUserDto): Promise <Partial<User>>{
     return userWithoutPassword
 }
 
-async updateUser(id : string, user : createUserDto) {
+async updateUser(id : string, user: Partial<createUserDto>) {
     await this.usersRepository.update(id, user)
 
     const updateUser = await this.usersRepository.findOneBy({ id })

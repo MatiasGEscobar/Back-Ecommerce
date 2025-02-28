@@ -1,4 +1,4 @@
-import { BadRequestException, CallHandler, ExecutionContext, Injectable, NestInterceptor, Req } from "@nestjs/common";
+import { BadRequestException, CallHandler, ExecutionContext, Injectable, NestInterceptor} from "@nestjs/common";
 import { Observable } from "rxjs";
 
 
@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 export class validateUserInteceptor implements NestInterceptor{
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
         const request = context.switchToHttp().getRequest();
-        const body = request.body;
+        const body = { ...request.body};
         const {email, name, password, address, phone} = body;
 
         if(!email || !name || !password || !address || !phone){

@@ -4,6 +4,7 @@ import { Category } from "src/entities/categories.entity";
 import * as data from "../utils/seeders/Archivo actividad 3.json";
 import { Product } from "src/entities/products.entity";
 import { NotFoundException } from "@nestjs/common";
+import { createProductDto } from "src/dtos/CreateProductDto";
 
 
 export class ProductsRepository{
@@ -74,7 +75,7 @@ async createProduct(product: Partial<Product>): Promise <Partial<Product>>{
     return newProduct;
 }
 
-async updateProduct(id : string, product: Product){
+async updateProduct(id : string, product: createProductDto){
     await this.productsRepository.update(id, product)
 
     const updateProduct = await this.productsRepository.findOneBy ({ id })

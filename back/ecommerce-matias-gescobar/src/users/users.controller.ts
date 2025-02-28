@@ -2,10 +2,10 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPi
 import { UsersService } from "./users.service";
 import { validateUserInteceptor } from "src/interceptors/validateUser.interceptor";
 import { AuthGuard } from "src/guards/auth.guard";
-import { createUserDto } from "src/dtos/CreateUserDto";
 import { RolesGuard } from "src/guards/roles.guard";
 import { Roles } from "src/decorators/roles.decorators";
 import { Role } from "src/roles.enum";
+import { createUserDto } from "src/dtos/CreateUserDto";
 
 
 @Controller('users')
@@ -32,7 +32,7 @@ export class UsersController{
     @UseInterceptors(validateUserInteceptor)
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)
-    updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() updateUser: createUserDto){
+    updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() updateUser: Partial<createUserDto>){
         return this.usersService.updateUser(id, updateUser);
     }
 

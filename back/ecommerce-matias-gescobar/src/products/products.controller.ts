@@ -6,6 +6,7 @@ import { AuthGuard } from "src/guards/auth.guard";
 import { Roles } from "src/decorators/roles.decorators";
 import { Role } from "src/roles.enum";
 import { RolesGuard } from "src/guards/roles.guard";
+import { createProductDto } from "src/dtos/CreateProductDto";
 
 
 @Controller('products')
@@ -41,7 +42,7 @@ export class ProductController{
     @UseInterceptors(validateProductInteceptor)
     @Roles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
-    updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() product: Product){
+    updateProduct(@Param('id', ParseUUIDPipe) id: string, @Body() product: createProductDto){
         return this.ProductService.updateProduct(id, product);
     }
 

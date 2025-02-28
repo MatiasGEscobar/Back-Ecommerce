@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 export class validateProductInteceptor implements NestInterceptor{
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
         const request = context.switchToHttp().getRequest();
-        const body = request.body;
+        const body = { ...request.body };
         const {name, description, price, stock, imgUrl} = body;
        
 
