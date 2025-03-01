@@ -55,7 +55,7 @@ export class User {
 
     @Column({
         type: "boolean",
-        default: true
+        default: false
     })
     isAdmin: boolean
 

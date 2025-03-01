@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { validateUserInteceptor } from "src/interceptors/validateUser.interceptor";
-import { AuthGuard } from "src/guards/auth.guard";
-import { RolesGuard } from "src/guards/roles.guard";
-import { Roles } from "src/decorators/roles.decorators";
-import { Role } from "src/roles.enum";
-import { createUserDto } from "src/dtos/CreateUserDto";
+import { validateUserInteceptor } from "../interceptors/validateUser.interceptor";
+import { AuthGuard } from "../guards/auth.guard";
+import { RolesGuard } from "../guards/roles.guard";
+import { Roles } from "../decorators/roles.decorators";
+import { Role } from "../roles.enum";
+import { createUserDto } from "../dtos/CreateUserDto";
 
 
 @Controller('users')

@@ -1,8 +1,8 @@
 import { NotFoundException } from "@nestjs/common";
-import { User } from "src/entities/users.entity";
+import { User } from "../entities/users.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { createUserDto } from "src/dtos/CreateUserDto";
+import { createUserDto } from "../dtos/CreateUserDto";
 
 
 export class UsersRepository{
