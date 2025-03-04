@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./products.service";
-import { Product } from "src/entities/products.entity";
-import { validateProductInteceptor } from "src/interceptors/validateProduct.interceptor";
-import { AuthGuard } from "src/guards/auth.guard";
-import { Roles } from "src/decorators/roles.decorators";
-import { Role } from "src/roles.enum";
-import { RolesGuard } from "src/guards/roles.guard";
-import { createProductDto } from "src/dtos/CreateProductDto";
+import { Product } from "../entities/products.entity";
+import { validateProductInteceptor } from "../interceptors/validateProduct.interceptor";
+import { AuthGuard } from "../guards/auth.guard";
+import { Roles } from "../decorators/roles.decorators";
+import { Role } from "../roles.enum";
+import { RolesGuard } from "../guards/roles.guard";
+import { createProductDto } from "../dtos/CreateProductDto";
 
 
 @Controller('products')
@@ -33,7 +33,7 @@ export class ProductController{
     @Post()
     @UseInterceptors(validateProductInteceptor)
     @HttpCode(HttpStatus.CREATED)
-    createProduct(@Body() createProduct : Product){
+    createProduct(@Body() createProduct : createProductDto){
        return this.ProductService.createProduct(createProduct);
     }
 

@@ -28,9 +28,7 @@ describe('usersController', () => {
                 provide: UsersService,
                 useValue: {
                     getUsers: jest.fn().mockResolvedValue(mockUser),
-                    getUserById: jest.fn().mockResolvedValue(mockUser[0]),
-                    updateUser: jest.fn().mockResolvedValue(mockUser[0]),
-                    deleteUser: jest.fn().mockResolvedValue(mockUser),
+                    getUserById: jest.fn().mockResolvedValue(mockUser[0])
             },
         },{
             provide: AuthGuard,
@@ -54,7 +52,19 @@ describe('usersController', () => {
 
     it('Create a instance of UsersController', () => {
         expect(usersController).toBeDefined();
-    })
+    });
+
+    it('deberia retornar una lista de usuarios y el servicio ser llamado', async () => {
+        const result = await usersController.getUsers();
+        expect(result).toEqual(mockUser);
+        expect(mockUserService.getUsers).toHaveBeenCalled()
+    });
+
+    it('deberia retornar un usuario y el servicio ser llamado', async () => {
+        const result = await usersController.getUserById('1');
+        expect(result).toEqual(mockUser[0]);
+        expect(mockUserService.getUserById).toHaveBeenCalledWith('1')
+    });
 
 
 })

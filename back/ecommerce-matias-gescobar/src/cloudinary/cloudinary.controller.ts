@@ -1,7 +1,7 @@
 import { Controller, Post, UseInterceptors, UploadedFile, Param, ParseUUIDPipe, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseGuards } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('files')
 export class CloudinaryController {

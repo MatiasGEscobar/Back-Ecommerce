@@ -1,10 +1,10 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Category } from "src/entities/categories.entity";
+import { Category } from "../entities/categories.entity";
 import * as data from "../utils/seeders/Archivo actividad 3.json";
-import { Product } from "src/entities/products.entity";
+import { Product } from "../entities/products.entity";
 import { NotFoundException } from "@nestjs/common";
-import { createProductDto } from "src/dtos/CreateProductDto";
+import { createProductDto } from "../dtos/CreateProductDto";
 
 
 export class ProductsRepository{
@@ -69,7 +69,7 @@ async addProducts() {
     return "Productos agregados"
 }
 
-async createProduct(product: Partial<Product>): Promise <Partial<Product>>{
+async createProduct(product: createProductDto): Promise <createProductDto>{
     const newProduct = await this.productsRepository.save(product)
 
     return newProduct;

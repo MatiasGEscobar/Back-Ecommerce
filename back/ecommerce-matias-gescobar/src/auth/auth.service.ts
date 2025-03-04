@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { UsersRepository } from 'src/users/users.repository';
+import { UsersRepository } from '../users/users.repository';
 import * as bcrypt from 'bcrypt'
-import { createUserDto } from 'src/dtos/CreateUserDto';
+import { createUserDto } from '../dtos/CreateUserDto';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'src/roles.enum';
+import { Role } from '../roles.enum';
 
 @Injectable()
 export class AuthService{
@@ -11,7 +11,7 @@ export class AuthService{
     private readonly jwtService: JwtService
   ){}
 
-async singUp(user: createUserDto){
+async signUp(user: createUserDto){
     const dbUser = await this.userRepository.findByEmail(user.email)
 
     if(!user){
@@ -27,11 +27,12 @@ async singUp(user: createUserDto){
     if(!hashedPassword){
         throw new BadRequestException("Password couldn't be hashed")
     }
+
     this.userRepository.createUser({...user, password: hashedPassword})
     return {success:  'User created succesfully'}
 }
     
-async singIn (email: string, password: string ): Promise<{}>{
+async signIn (email: string, password: string ): Promise<{}>{
     const user = await this.userRepository.findByEmail(email);
     const isPasswordValid = await bcrypt.compare(password, user?.password)
 
