@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDetail } from "../entities/orderDetails.entity";
 import { Order } from "../entities/orders.entity";
@@ -19,7 +19,7 @@ export class ordersRepository {
         private productRepository: Repository<Product>
     ) {}
 
-async addOrder(userId: string, products: any){
+async addOrder(userId: string, products: Product[]){
     let total = 0;
     const user = await this.userRepository.findOneBy({ id: userId})
 
@@ -40,11 +40,11 @@ async addOrder(userId: string, products: any){
             })
 
             if(!product){
-                return 'Product not Found'
+                throw new BadRequestException ('Product not Found')
             }
 
             if (product.stock === 0){
-                return 'Product without stock!'
+                throw new BadRequestException ('Product without stock!')
             }
 
             total += Number(product.price)
@@ -64,7 +64,7 @@ async addOrder(userId: string, products: any){
     orderDetail.products = productArray
     orderDetail.order = newOrder
 
-    await this.ordersRepository.save(orderDetail)
+    await this.orderDetailRepository.save(orderDetail)
 
     return await this.ordersRepository.find({
         where:{ id: newOrder.id },

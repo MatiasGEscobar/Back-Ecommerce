@@ -1,8 +1,9 @@
-import { NotFoundException } from "@nestjs/common";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { User } from "../entities/users.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { createUserDto } from "../dtos/CreateUserDto";
+import { updateUserDto } from "src/dtos/updateUserDto";
 
 
 export class UsersRepository{
@@ -46,7 +47,13 @@ async createUser(user: createUserDto): Promise <Partial<User>>{
     return userWithoutPassword
 }
 
-async updateUser(id : string, user: Partial<createUserDto>) {
+async updateUser(id : string, user: updateUserDto) {
+    const serchUser = await this.usersRepository.findOneBy({ id })
+
+    if(!serchUser){
+        throw new BadRequestException ("El usuario no exite, debe registrarse")
+    }
+
     await this.usersRepository.update(id, user)
 
     const updateUser = await this.usersRepository.findOneBy({ id })

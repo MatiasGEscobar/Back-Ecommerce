@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./products.service";
-import { Product } from "../entities/products.entity";
 import { validateProductInteceptor } from "../interceptors/validateProduct.interceptor";
 import { AuthGuard } from "../guards/auth.guard";
 import { Roles } from "../decorators/roles.decorators";
 import { Role } from "../roles.enum";
 import { RolesGuard } from "../guards/roles.guard";
 import { createProductDto } from "../dtos/CreateProductDto";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 
 @Controller('products')
@@ -37,6 +37,7 @@ export class ProductController{
        return this.ProductService.createProduct(createProduct);
     }
 
+    @ApiBearerAuth()
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(validateProductInteceptor)

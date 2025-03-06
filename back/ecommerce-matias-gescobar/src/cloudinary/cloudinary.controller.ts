@@ -2,11 +2,13 @@ import { Controller, Post, UseInterceptors, UploadedFile, Param, ParseUUIDPipe, 
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../guards/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('files')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
+  @ApiBearerAuth()
   @Post("uploadImage/:id")
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))

@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 import { Category } from "../entities/categories.entity";
 import * as data from "../utils/seeders/Archivo actividad 3.json";
 import { Product } from "../entities/products.entity";
-import { NotFoundException } from "@nestjs/common";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { createProductDto } from "../dtos/CreateProductDto";
 
 
@@ -42,15 +42,37 @@ async getById(id : string) : Promise<Product | undefined>{
 }
 
 async addProducts() {
-    const categories = await this.categoriesRepository.find()
+    const categories = await this.categoriesRepository.find()               //BUSCO TODAS LAS CATEGORIAS
 
-    data?.map(async (element) => {
+    data?.map(async (element) => {                                          //MAPEO LA BDD Y COMPARO CADA NOMBRE DE DE LAS CATEGORIAS QUE TENGO EN MI BDD CON LA CON CADA CATEGORIA DE PRODUCTOS QUE TIENE EL ARCHIVO MOCKEADO
         const relatedCategory = categories.find(
             (category) => category.name === element.category,
         )
 
-        const product = new Product()
-        product.name = element.name
+        if(!relatedCategory){
+            const newCategory = this.categoriesRepository.create({
+                name: element.category,
+            })
+            await this.categoriesRepository.save(newCategory)
+
+            const product = new Product()                                       //CREAMOS UN NUEVO PRODUCTO
+            product.name = element.name                                         //CARGAMOS LOS DATOS PROVENIENTES DEL ARCHIVO MOCKEADO (CON SUS PRODUCTOS) A LA BDD, RELACIONAMOS LA CATEGORIA TAMBIEN
+            product.description = element.description
+            product.price = element.price
+            product.stock = element.price
+            product.category = newCategory
+
+            await this.productsRepository
+            .createQueryBuilder()
+            .insert()
+            .into(Product)                                                      //INSERTA DENTRO DE LA BDD
+            .values(product)                                                    //LOS VALORES AGREGADOS AL NUEVO PRODUCTO
+            .orUpdate(['description', 'price', 'stock'], ['name'])              //SOLO ACTUALIZA LOS DATOS QUE VEMOS.
+            .execute()
+        }
+
+        const product = new Product()                                       //CREAMOS UN NUEVO PRODUCTO
+        product.name = element.name                                         //CARGAMOS LOS DATOS PROVENIENTES DEL ARCHIVO MOCKEADO (CON SUS PRODUCTOS) A LA BDD, RELACIONAMOS LA CATEGORIA TAMBIEN
         product.description = element.description
         product.price = element.price
         product.stock = element.price
@@ -60,9 +82,9 @@ async addProducts() {
         await this.productsRepository
         .createQueryBuilder()
         .insert()
-        .into(Product)
-        .values(product)
-        .orUpdate(['description', 'price', 'stock'], ['name'])
+        .into(Product)                                                      //INSERTA DENTRO DE LA BDD
+        .values(product)                                                    //LOS VALORES AGREGADOS AL NUEVO PRODUCTO
+        .orUpdate(['description', 'price', 'stock'], ['name'])              //SOLO ACTUALIZA LOS DATOS QUE VEMOS.
         .execute()
     })
 
@@ -76,11 +98,17 @@ async createProduct(product: createProductDto): Promise <createProductDto>{
 }
 
 async updateProduct(id : string, product: createProductDto){
+    const serchProduct = await this.productsRepository.findOneBy ({ id })
+
+    if(!serchProduct){
+        throw new BadRequestException( "El producto no existe, debe Crearlo")
+    }
+
     await this.productsRepository.update(id, product)
 
     const updateProduct = await this.productsRepository.findOneBy ({ id })
 
-    return updateProduct
+    return `Producto Actualizado: ${updateProduct}`
 }
 
 async deleteProduct(id : string): Promise<Partial<Product>>{
