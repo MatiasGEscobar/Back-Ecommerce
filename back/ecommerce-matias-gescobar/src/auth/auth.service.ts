@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { UsersRepository } from '../users/users.repository';
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from "bcryptjs"
 import { createUserDto } from '../dtos/CreateUserDto';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '../roles.enum';
@@ -32,20 +32,29 @@ async signUp(user: createUserDto){
     return {success:  'User created succesfully'}
 }
     
-async signIn (email: string, password: string ): Promise<{}>{
+async signIn (email: string, password: string ): Promise<{ success: string; token: string }>{
     const user = await this.userRepository.findByEmail(email);
-    const isPasswordValid = await bcrypt.compare(password, user?.password)
+    console.log('User from database:', user); // Agrega este log
 
-    if (!user || !isPasswordValid) {
-        throw new BadRequestException("Login Incorrecto");
+    if (!user) {
+      throw new BadRequestException('Login Incorrecto');
+    }
+    console.log('User password from database:', user.password); // Agrega este log
+    console.log('Type of user.password:', typeof user.password);
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new BadRequestException('Login Incorrecto');
     }
 
     const userPayload = {
-        id: user.id,
-        email: user.email,
-        roles: [user.isAdmin? Role.Admin : Role.User]
-    }
-    const token = this.jwtService.sign(userPayload)
-        return { success: "Login Exitoso!", token }
-    }
+      id: user.id,
+      email: user.email,
+      roles: [user.isAdmin ? Role.Admin : Role.User],
+    };
+
+    const token = this.jwtService.sign(userPayload);
+    return { success: 'Login Exitoso!', token };
+  }
 }

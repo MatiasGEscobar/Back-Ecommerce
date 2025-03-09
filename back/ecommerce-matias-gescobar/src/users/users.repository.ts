@@ -79,6 +79,9 @@ async deleteUser(id : string): Promise<Partial<User>>{
 }
 
 async findByEmail(email: string): Promise<User>{
-    return await this.usersRepository.findOneBy({email});
+    console.log('UsersRepository.findByEmail:', email);
+    const user = await this.usersRepository.findOneBy({ email });
+    console.log('UsersRepository.findByEmail result:', user);
+    return user;
 }
 }
