@@ -19,16 +19,16 @@ export class createOrderDto {
             "id": "562df30d-ccfc-40d2-990e-e2d73547ac24",
             "name": "Razer BlackWidow V3",
             "description": "The best keyboard in the world",
-            "price": "99.99",
-            "stock": "99.99",
+            "price": 99.99,
+            "stock": 99.99,
             "imgUrl": "https://www.flaticon.es/icono-gratis/imagen-rota_13434972"
 	    },
 	    {
 		    "id": "01cb2b12-ef99-465d-bf1c-57c554cce63c",
 		    "name": "Logitech G502 Pro",
 		    "description": "The best mouse in the world",
-		    "price": "39.99",
-		    "stock": "39.99",
+		    "price": 39.99,
+		    "stock": 39.99,
 		    "imgUrl": "https://www.flaticon.es/icono-gratis/imagen-rota_13434972"
         }]`
     })

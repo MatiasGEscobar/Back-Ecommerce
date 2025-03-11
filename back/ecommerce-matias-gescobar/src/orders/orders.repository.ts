@@ -21,7 +21,7 @@ export class ordersRepository {
 
 async addOrder(userId: string, products: Product[]){
     let total = 0;
-    const user = await this.userRepository.findOneBy({ id: userId})
+    const user = await this.userRepository.findOneBy({ id: userId })
 
     if(!user){
         return 'User not Found';
