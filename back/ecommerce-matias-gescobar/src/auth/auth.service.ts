@@ -51,7 +51,11 @@ async signIn (email: string, password: string ): Promise<{ success: string; toke
     const userPayload = {
       id: user.id,
       email: user.email,
-      roles: [user.isAdmin ? Role.Admin : Role.User],
+      roles: [
+        user.isAdmin ? Role.Admin : 
+        user.isTrainer ? Role.Trainer : 
+        Role.Client
+      ]
     };
 
     const token = this.jwtService.sign(userPayload);

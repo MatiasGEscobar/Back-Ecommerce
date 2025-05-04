@@ -84,4 +84,18 @@ async findByEmail(email: string): Promise<User>{
     console.log('UsersRepository.findByEmail result:', user);
     return user;
 }
+
+async updateAdminUser(id:string){
+    const serchUser = await this.usersRepository.findOneBy({ id })
+
+    if(!serchUser){
+        throw new BadRequestException ("El usuario no exite, debe registrarse")
+    }
+
+    serchUser.isAdmin = true;
+
+     await this.usersRepository.save(serchUser);
+
+
+}
 }

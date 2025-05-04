@@ -46,4 +46,13 @@ export class UsersController{
     deleteUser(@Param('id', ParseUUIDPipe) id: string){
         return this.usersService.deleteUser(id);
     }
+
+    @Put('/superAdmin/:id')
+    @UseInterceptors(validateUserInteceptor)
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.SuperAdmin)
+    @UseGuards(AuthGuard,RolesGuard)
+    updateAdminUser(@Param('id', ParseUUIDPipe) id: string){
+        return this.usersService.updateAdminUser(id);
+    }
 }
