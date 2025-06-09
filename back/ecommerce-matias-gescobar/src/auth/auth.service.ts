@@ -52,9 +52,9 @@ async signIn (email: string, password: string ): Promise<{ success: string; toke
       id: user.id,
       email: user.email,
       roles: [
-        user.isAdmin ? Role.Admin : 
-        user.isTrainer ? Role.Trainer : 
-        Role.Client
+        user.isAdmin ? false : true
+        // user.isTrainer ? Role.Trainer : 
+        // Role.Client
       ]
     };
 

@@ -5,7 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { UsersRepository } from '../src/users/users.repository';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { AuthGuard } from '../src/guards/auth.guard';
 import { Role } from '../src/roles.enum';
 import { RolesGuard } from '../src/guards/roles.guard';

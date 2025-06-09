@@ -1,24 +1,26 @@
+# Usa Node.js con Alpine
 FROM node:20-alpine
 
+# Crea el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Instalar dependencias de compilación
+# Instala compiladores para dependencias nativas
 RUN apk add --no-cache make gcc g++ python3
 
-# Copiar archivos de configuración
+# Copia solo los archivos necesarios primero
 COPY package*.json ./
-RUN npm uninstall bcrypt
-RUN npm install bcryptjs
+
+# Instala dependencias
 RUN npm install
 
-# Copiar el resto del código
+# Copia el resto del código
 COPY . .
 
-# Compilar la aplicación
+# Compila el proyecto
 RUN npm run build
 
-# Exponer puerto
+# Expone el puerto en el que corre NestJS (3000 dentro del contenedor)
 EXPOSE 3000
 
-# Comando para ejecutar la aplicación
-CMD ["npm", "run", "start:prod"]
+# Comando que inicia la app
+CMD ["node", "dist/main"]
